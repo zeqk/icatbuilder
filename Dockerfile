@@ -16,15 +16,16 @@ RUN cd $ANDROID_HOME \
     && echo 'Extracting android tools...' \
     && unzip -o tools_r25.2.3-linux.zip -d  $ANDROID_HOME \
     && rm tools_r25.2.3-linux.zip \
-    && rm $ANDROID_HOME/tools/templates/gradle/wrapper/gradle/wrapper/gradle-wrapper.properties \
-    && echo 'Fixing api-versions.xml...' \
-    && sed 's/init>/init/g' -n $ANDROID_HOME/platform-tools/api/api-versions.xml \
     && unzip $ANDROID_HOME/platform-tools/api/annotations.zip -d  $ANDROID_HOME/platform-tools/api/ \
     && rm $ANDROID_HOME/platform-tools/api/annotations.zip \
-    && sed 's/Callback</Callback&lt;/g' -n $ANDROID_HOME/platform-tools/api/android/accounts/annotations.xml \
-    && sed 's/>,/&gt;,/g' -n $ANDROID_HOME/platform-tools/api/android/accounts/annotations.xml \
-    && head -20 $ANDROID_HOME/platform-tools/api/android/accounts/annotations.xml \
-    && zip -r $ANDROID_HOME/platform-tools/api/annotations.zip $ANDROID_HOME/platform-tools/api/android
+    && rm $ANDROID_HOME/tools/templates/gradle/wrapper/gradle/wrapper/gradle-wrapper.properties \
+    && echo 'Fixing xml...' \    
+    && sed 's/init>/init/g' -n $ANDROID_HOME/platform-tools/api/api-versions.xml \
+    && find . -name "*.xml" -type f -print0 | xargs -0 sed -n 's/init>/init/g' \
+    && find . -name "*.xml" -type f -print0 | xargs -0 sed -n 's/Callback</Callback&lt;/g' \
+    && find . -name "*.xml" -type f -print0 | xargs -0 sed -n 's/>,/&gt;,/g' \
+    && zip -r $ANDROID_HOME/platform-tools/api/annotations.zip $ANDROID_HOME/platform-tools/api/android \
+    && chmod 775 $ANDROID_HOME/gradle-1.12-all.zip
 COPY gradle/gradle-wrapper.properties $ANDROID_HOME/tools/templates/gradle/wrapper/gradle/wrapper/
 USER cirrus
     
