@@ -26,6 +26,7 @@ RUN cd $ANDROID_HOME \
     && find . -name "*.xml" -type f -print0 | xargs -0 sed -n 's/>,/&gt;,/g' \
     && zip -r $ANDROID_HOME/platform-tools/api/annotations.zip $ANDROID_HOME/platform-tools/api/android \
     && chmod 775 $ANDROID_HOME/gradle-1.12-all.zip
+    && export PATH=$PATH:/opt/android-sdk-linux/platform-tools/:/opt/android-sdk-linux/tools/:/opt/android-sdk-linux/build-tools/28.0.3/
 COPY gradle/gradle-wrapper.properties $ANDROID_HOME/tools/templates/gradle/wrapper/gradle/wrapper/
 USER cirrus
     
